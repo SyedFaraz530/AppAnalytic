@@ -18,7 +18,7 @@ public class Analytic {
     public Analytic(Context context) {
         this.context = context;
     }
-
+//
     public void open(String screenName, String appVersion, String appUser) {
         String time = getCurrentDateTime("yyyy-MM-dd HH:mm:ss");
         ScreenViewBean viewBean = new ScreenViewBean();
