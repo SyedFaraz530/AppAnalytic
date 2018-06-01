@@ -4,6 +4,7 @@ import android.content.Context;
 import android.util.Log;
 
 import com.appanalytic.faraz.appanalytic.DB.Helper;
+import com.appanalytic.faraz.appanalytic.DB.SharedPreference;
 import com.appanalytic.faraz.appanalytic.bean.ScreenViewBean;
 
 import java.text.ParseException;
@@ -13,22 +14,29 @@ import java.util.Date;
 import java.util.Locale;
 
 public class Analytic {
-    Context context;
+    static Context context;
+    SharedPreference sharedPreference;
 
     public Analytic(Context context) {
         this.context = context;
+        sharedPreference = SharedPreference.getInstance(context);
     }
-//
-    public void open(String screenName, String appVersion, String appUser) {
-        String time = getCurrentDateTime("yyyy-MM-dd HH:mm:ss");
+
+    public void Url(String url) {
+        sharedPreference.saveUrl(url);
+    }
+
+    //
+    public static void open(String screenName, String appVersion, String appUser, String openTime) {
+//        String time = getCurrentDateTime("yyyy-MM-dd HH:mm:ss");
         ScreenViewBean viewBean = new ScreenViewBean();
         viewBean.setScreenName(screenName);
 
         try {
 //            String version = context.getPackageManager().getPackageInfo(context.getPackageName(), 0).versionName;
-            viewBean.setAddedOn(time);
+            viewBean.setAddedOn(openTime);
             viewBean.setAppVersion(appVersion);
-            viewBean.setOpenTime(time);
+            viewBean.setOpenTime(openTime);
             viewBean.setAppUser(appUser);
             new Helper(context).add(viewBean);
         } catch (Exception e) {
@@ -36,26 +44,16 @@ public class Analytic {
         }
     }
 
-    public void close() {
-
-    }
-
-
-    public static void updateScreenView(Context context, ScreenViewBean viewBean) {
+    public static void close(String openTime) {
         String closeTime = getCurrentDateTime("yyyy-MM-dd HH:mm:ss");
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        ScreenViewBean viewBean = new ScreenViewBean();
         try {
             Date closeDate = format.parse(closeTime);
-            Date OpenDate = format.parse(viewBean.getOpenTime());
+            Date OpenDate = format.parse(openTime);
             Log.i("+++", "OpenDate: " + OpenDate.getTime() + " Close Date: " + closeDate.getTime());
             long mills = closeDate.getTime() - OpenDate.getTime();
-//            int hours = (int) (mills / (1000 * 60 * 60));
-//            int mins = (int) ((mills / (1000 * 60)) % 60);
-//            long seconds = (mills / 1000) % 60;
 
-//            String diff = hours + ":" + mins + ":" + seconds;
-
-//            String result = diff.replaceAll(":-", ":");
             viewBean.setTimeSpent(mills + "");
             Log.i("+++", " updateScreenView: " + mills);
         } catch (ParseException e) {

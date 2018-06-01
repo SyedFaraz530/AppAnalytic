@@ -20,7 +20,7 @@ public class Helper {
         cv.put(DatabaseHelper.COLUMN_SCREEN_VIEW_OPENTIME, bean.getOpenTime());
         cv.put(DatabaseHelper.COLUMN_SCREEN_VIEW_SCREENNAME, bean.getScreenName());
         cv.put(DatabaseHelper.COLUMN_APP_VERSION, bean.getAppVersion());
-
+        cv.put(DatabaseHelper.COLUMN_APP_VERSION, bean.getAppUser());
         helper.insert(DatabaseHelper.TABLE_SCREEN_VIEW, null, cv);
 
     }
@@ -33,4 +33,6 @@ public class Helper {
         helper.update(DatabaseHelper.TABLE_SCREEN_VIEW, cv, DatabaseHelper.COLUMN_SCREEN_VIEW_OPENTIME + "=?", arr);
 
     }
+
+
 }
